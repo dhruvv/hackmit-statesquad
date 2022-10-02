@@ -1,5 +1,7 @@
+import json
+from urllib import response
 from youtube_transcript_api import YouTubeTranscriptApi
-from flask import Flask
+from flask import Flask, request
 import spacy
 nlp = spacy.load('en_core_web_lg')
 #https://www.youtube.com/watch?v=7y_2jQlnKag
@@ -7,8 +9,10 @@ nlp = spacy.load('en_core_web_lg')
 
 app = Flask(__name__)
 
-@app.route("/")
-def findBestMatch(userQuery, youtubeID):
+@app.route("/match", methods = ["GET"])
+def findBestMatch():
+  youtubeID = request.args.get('yt_id')
+  userQuery = request.args.get('q')
   transCpt = YouTubeTranscriptApi.get_transcript(youtubeID)
   ans = ""
   ansTime = 0.0
@@ -22,4 +26,4 @@ def findBestMatch(userQuery, youtubeID):
   return {'ans': ans, 'ansTime': ansTime}
 
 if __name__ == '__main__':
-  app.run()
+  app.run(debug=True)
