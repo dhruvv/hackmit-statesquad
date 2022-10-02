@@ -11,7 +11,38 @@ import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 
+
 function App() {
+  const [message, setMessage] = useState('');
+
+  const handleChange = event => {
+    setMessage(event.target.value);
+
+    console.log('value is:', event.target.value);
+  };
+
+  const [message2, setMessage2] = useState('');
+
+  const handleChange2 = event => {
+    setMessage(event.target.value);
+
+    console.log('value is:', event.target.value);
+  };
+
+  const [content, setContent] = useState('');
+
+
+  const onClickHandler = (url) => {
+        // Simple POST request with a JSON body using fetch
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: message})
+      };
+    fetch('http://127.0.0.1:5000/match?yt_id='+message+'&q='+message2)
+          .then(response => response.json())
+          .then(data => setContent(data));
+  }
   return (
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="static">
@@ -34,12 +65,15 @@ function App() {
     <Card>
       <CardContent>
       <Typography variant="body2" color="text.secondary">
-         <TextField fullWidth label="Enter URL here" id="youtubeID" />
-         <IconButton aria-label="delete" style={{
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-}}>
+         <TextField fullWidth label="Enter URL here" id="youtubeID" onChange={handleChange} />
+         <TextField fullWidth label="Enter URL here" id="youtubeID" onChange={handleChange2} />
+          <IconButton aria-label="delete" style={{
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+          }}
+          onClick={() => {onClickHandler("hello");} }
+          >
             <SearchIcon  />
           </IconButton>
       </Typography>
@@ -48,7 +82,7 @@ function App() {
     <Card>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          Please enter a URL!
+            {content}
           </Typography>
       </CardContent>
     </Card>
